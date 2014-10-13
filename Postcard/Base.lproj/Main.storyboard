@@ -61,6 +61,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AlbertEinsteinStamp.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="v0w-NQ-Fbl">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <variation key="widthClass=compact" fixedFrame="YES">
+                                    <rect key="frame" x="224" y="129" width="80" height="80"/>
+                                </variation>
+                            </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Enter Name" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ez5-yH-5Nc">
                                 <rect key="frame" x="0.0" y="-30" width="97" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -99,30 +105,35 @@
                                     <rect key="frame" x="16" y="72" width="288" height="58"/>
                                 </variation>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="AlbertEinsteinStamp.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="v0w-NQ-Fbl">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cNI-Hl-hmh">
+                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
                                 <variation key="widthClass=compact" fixedFrame="YES">
-                                    <rect key="frame" x="224" y="129" width="80" height="80"/>
+                                    <rect key="frame" x="16" y="145" width="192" height="21"/>
                                 </variation>
-                            </imageView>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <variation key="default">
                             <mask key="subviews">
+                                <exclude reference="v0w-NQ-Fbl"/>
                                 <exclude reference="ez5-yH-5Nc"/>
                                 <exclude reference="Pt1-vI-bJL"/>
                                 <exclude reference="Kan-b0-Pfu"/>
                                 <exclude reference="dWg-5u-gGz"/>
-                                <exclude reference="v0w-NQ-Fbl"/>
+                                <exclude reference="cNI-Hl-hmh"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
+                                <include reference="v0w-NQ-Fbl"/>
                                 <include reference="ez5-yH-5Nc"/>
                                 <include reference="Pt1-vI-bJL"/>
                                 <include reference="Kan-b0-Pfu"/>
                                 <include reference="dWg-5u-gGz"/>
-                                <include reference="v0w-NQ-Fbl"/>
+                                <include reference="cNI-Hl-hmh"/>
                             </mask>
                         </variation>
                     </view>
@@ -133,6 +144,7 @@
                         <outlet property="enterNameTextField" destination="ez5-yH-5Nc" id="yhn-h2-Puo"/>
                         <outlet property="mailButton" destination="Kan-b0-Pfu" id="2pI-Ba-hTl"/>
                         <outlet property="messageLabel" destination="dWg-5u-gGz" id="r82-ho-LXS"/>
+                        <outlet property="nameLabel" destination="cNI-Hl-hmh" id="df7-YP-yXA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
