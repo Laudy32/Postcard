@@ -13,13 +13,17 @@ home beforehand, see `../web/`.
 2. **Build the rules-aware model**:
    ```
    cd rules-chatbot/kiosk
-   ./build-model.sh
+   bash build-model.sh
    ```
+   (Using `bash build-model.sh` rather than `./build-model.sh` avoids
+   needing the file's executable permission bit set, which some download/
+   upload methods don't preserve.)
+
    This pulls a base model (`llama3.1:8b` by default) and bakes the full
    ruleset in as its system prompt, producing a model called
    `swordfight-rules`. On a weaker laptop, use a smaller base model instead:
    ```
-   ./build-model.sh llama3.2:3b
+   bash build-model.sh llama3.2:3b
    ```
    (or `llama3.2:1b` for the lightest option — lower answer quality, but
    noticeably faster on old hardware).
