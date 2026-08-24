@@ -1,5 +1,8 @@
 # SoCal Swordfight 2026 Rules Helper
 
+**Asked to test this out? Start here → [`HOW_TO_TEST.md`](./HOW_TO_TEST.md)**
+(step-by-step, no GitHub or Terminal experience needed)
+
 A chatbot that answers questions using only the official SoCal Swordfight
 ruleset — no general knowledge, free to run, works with no internet at the
 venue. Two pieces, covering the two situations this needs to work in:
