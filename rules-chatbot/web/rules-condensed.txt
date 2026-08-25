@@ -118,12 +118,15 @@ LONGSWORD
   Friday cutting qualification (unlimited retries): 4 required cut types
   (clean descending cut right, clean descending cut left, arrested
   "half-cut" right, arrested half-cut left) across 6 attempts.
-- Matches to 7 points. Scoring: 3 pts for cut/thrust to upper opening or
-  thrust to torso (standing takedown also 3 pts, Tier-A/B Open & URG
+- Matches to 7 points. Base scoring: 3 pts for cut/thrust to upper opening
+  or thrust to torso (standing takedown also 3 pts, Tier-A/B Open & URG
   Tier-A only); 1 pt for all other cuts/thrusts, slices to upper
-  opening/arm, or pommel strike to mask. +1 extra point for a "Bound
-  Action" (your blade in contact with the opponent's blade when the hit
-  lands, or their blade already controlled by a grapple).
+  opening/arm, or pommel strike to mask. A "Bound Action" (your blade in
+  contact with the opponent's blade when the hit lands, or their blade
+  already controlled by a grapple) ADDS 1 point to the base value above —
+  so a 3-pt hit becomes 4 pts if Bound, and a 1-pt hit becomes 2 pts if
+  Bound. Worked example: a Bound cut to the head = 3 base + 1 Bound = 4
+  points total.
 - One-handed strikes are illegal outside of grappling.
 - Throws/takedowns only allowed in Open Tier-A/B and URG Tier-A.
 - Required gear beyond baseline: purpose-built heavy HEMA gloves (no
@@ -197,15 +200,11 @@ which allows any direction.
 Equipment: European longswords/arming swords only (loaner swords
 available); no messers, sabers, zweihanders, etc without prior approval.
 Judging: each cut is scored out of 10, combining a cut-quality deduction
-and a form deduction (roughly: Final Score = 10 − sqrt(cutDeduction² +
-formDeduction²)). Cut deductions cover things like "mountains" (blade
-re-crossing a previous cut), landing zone/distance of the cut piece,
-scallops (curved cut path), cutting below the marked limit, or missing/
-wrong cuts. Form deductions cover chambering errors, balance issues, and
-(in reactive rounds) not being in the waiting area at the right time.
-Hitting the cutting stand or floor, or releasing the sword, are penalized
-severely (can be a DQ). Paper-target cuts use a similar but separate
-deduction scale.
+(covers things like "mountains" [blade re-crossing a prior cut], landing
+zone, scallops, cutting below the marked limit, or missing/wrong cuts) and
+a form deduction (chambering errors, balance, waiting-area timing in
+reactive rounds). Hitting the stand/floor or releasing the sword is
+penalized severely (can be a DQ). Paper targets use a similar scale.
 The exact cutting patterns/order required differ by weapon and
 tier (Tier A/B/C, U18) and get fairly detailed round-by-round — ask a
 tournament director for the specific pattern required for your division
