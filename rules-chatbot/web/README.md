@@ -31,8 +31,22 @@ python3 -m http.server 8000
 ```
 
 Then open `http://localhost:8000` in a WebGPU-capable browser (recent Chrome,
-Edge, or Safari 18+). First load downloads the model (~700MB-1GB depending on
-quantization) and caches it in the browser; subsequent loads work offline.
+Edge, or Safari 18+). First load downloads the model (currently
+Llama-3.2-3B-Instruct, ~2GB) and caches it in the browser; subsequent loads
+work offline.
+
+### Why 3B, not 1B
+
+The original default was Llama-3.2-1B (faster, smaller download), but real
+testing showed it wasn't reliable enough: it fabricated specific numbers not
+in the document, and — most notably — confused "cut" as a sparring scoring
+action with "cut" as a Cutting Tournament judged attempt, two unrelated
+things that share vocabulary. 3B has meaningfully better comprehension at
+the same 4,096-token context ceiling. Dropping back to 1B is a one-line
+change (`MODEL_ID` in `index.html`) if your target hardware can't handle
+3B's download/speed, but expect similar mistakes to return — this isn't
+just a prompt-wording issue, smaller models are genuinely less reliable at
+this kind of disambiguation.
 
 ## Deploying
 
@@ -57,6 +71,6 @@ regardless of model size.
   venue kiosk instead.
 - Content is a condensed summary, not the verbatim ruleset — flagged in the
   page header and in the model's own guardrail instructions.
-- Small local models (1B params here) follow instructions less reliably than
+- Small local models (3B params here) follow instructions less reliably than
   a large hosted model. Validate actual behavior in a real browser before
   relying on it (see the main plan's Verification section).
