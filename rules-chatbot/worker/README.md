@@ -1,63 +1,142 @@
-# Rules Helper answer service (Cloudflare Worker + Google Gemini)
+# Setting up the Rules Helper's answer service
 
-The web page (`web/index.html`) doesn't answer questions itself. It sends each
-question to this small program, `worker.js`, which runs for free on Cloudflare.
-The Worker combines the question with the **complete, word-for-word 2026
-ruleset** (`kiosk/rules-full.txt` in this repository) and asks Google's Gemini AI
-to answer from it. The Gemini key stays hidden inside the Worker and never
-appears on the public page.
+**Who this is for:** the one person setting the chatbot up, once, before it's
+shared. Everyone else just uses the web page and never needs any of this.
 
-This is a **one-time setup** done in advance by whoever manages the chatbot.
-It's all done in web browsers — no Terminal, no installs. Budget about 20 minutes.
+**Time:** about 30 minutes. **Cost:** free. **Needed:** a computer with a web
+browser. No Terminal, no software to install.
 
-## What you need
-- A Google account (for the free Gemini key). No credit card.
-- An email address for a free Cloudflare account. No credit card.
-- Edit access to this GitHub repository.
+## What you're setting up, in plain terms
 
-## Step 1 — Get a free Gemini API key
-1. Go to **aistudio.google.com** and sign in with your Google account.
-2. Click **Get API key**, then **Create API key**. Copy the key (a long string of letters and numbers) somewhere safe for Step 3.
-3. **Do not** turn on billing for this key's Google Cloud project. Without billing it stays on the free tier: the worst that can happen is it runs out of free requests for the day — it can never charge you.
-4. While you're there, note the free-tier limits for the model named in `worker.js` (currently `gemini-2.5-flash`) — especially **requests per day**. That's the realistic ceiling on how many questions the page can answer per day.
+The chat web page can't answer questions by itself. Behind the scenes, three
+things work together:
 
-## Step 2 — Create the Worker on Cloudflare
-1. Go to **dash.cloudflare.com** and create a free account (or sign in).
-2. In the left sidebar, open **Workers & Pages** (sometimes under **Compute**), then click **Create** → **Create Worker** (pick the "Hello World" starter if asked).
-3. Give it a name, e.g. `socal-swordfight-rules`, and click **Deploy**.
-4. Click **Edit code**. Delete everything in the editor, then paste in the entire contents of `worker.js` from this folder. Click **Deploy**.
-5. Note the Worker's address shown on its page — it looks like `https://socal-swordfight-rules.YOUR-NAME.workers.dev`.
+1. **The web page** (on GitHub) — where people type questions.
+2. **A small "middleman" program called a Worker** (on Cloudflare, a free web
+   service) — it receives each question, attaches the full rulebook, and
+   passes it on.
+3. **Google Gemini** (Google's AI) — reads the rulebook and writes the answer.
 
-## Step 3 — Give the Worker your Gemini key
-1. On the Worker's page, go to **Settings** → **Variables and Secrets** → **Add**.
-2. Type: **Secret**. Name: `GEMINI_API_KEY` (exactly like that). Value: paste your key from Step 1.
-3. Save / Deploy.
+Gemini needs a password-like code called an **API key** to know the requests are
+allowed. The Worker holds that key privately, so it never appears on the public
+web page. That's the whole reason the Worker exists.
 
-## Step 4 — Check the Worker is working
-Open the Worker's address from Step 2 in any browser. You should see a short
-message that includes `"apiKeyConfigured":true` and `"rules":{"ok":true,...}`.
-- `apiKeyConfigured` is `false` → redo Step 3 (name must be exactly `GEMINI_API_KEY`).
-- `rules` shows `"ok":false` → the ruleset file couldn't be loaded; check `RULES_URL` at the top of `worker.js` points at this repository's `kiosk/rules-full.txt` (only needed if the repository was renamed or moved).
+You'll create two free accounts (Google AI Studio, Cloudflare), copy some text
+between them, and change one line on GitHub.
 
-## Step 5 — Connect the web page to the Worker
-1. On GitHub, open `web/index.html` and click the pencil (Edit) icon.
-2. Find the line `const WORKER_URL = "";` near the bottom and put your Worker's address between the quotes, e.g.
-   `const WORKER_URL = "https://socal-swordfight-rules.YOUR-NAME.workers.dev";`
-3. Commit. GitHub Pages republishes the site automatically within a minute or two.
+## Words you'll see
+- **API key** — a long code that works like a password for Google's AI. Treat it like a password: don't post it or share it.
+- **Worker** — the small middleman program described above.
+- **Deploy** — Cloudflare's word for "save and switch on."
+- **Repository** (or **repo**) — a project's home on GitHub. This one is at `github.com/Laudy32/SoCal-Swordfight-Rules-Chatbot`.
+- **Commit** — GitHub's word for "save this change."
 
-## Step 6 — Try it
-Open the site (`https://laudy32.github.io/SoCal-Swordfight-Rules-Chatbot/`) and
-ask a few questions — see `HOW_TO_TEST.md` for a good list.
+---
 
-## If something goes wrong
-The page shows a short message; the Worker's **Logs** tab on Cloudflare shows details.
-- *"Requests are only accepted from the SoCal Swordfight rules page"* — the page's address isn't in `ALLOWED_ORIGINS` at the top of `worker.js`. If the site moves to a different address, add it there and redeploy.
-- *"free usage limit"* — the Gemini free tier is used up for now (per-minute or per-day). It resets on its own.
-- *"the AI model … isn't available"* — Google retired or renamed the model. Change `MODEL` at the top of `worker.js` to a current Flash model listed in Google AI Studio, then redeploy.
-- *"key isn't valid" / "rejected this helper's key"* — redo Steps 1 and 3 with a fresh key.
+## Part 1 — Get a free Gemini API key from Google
+
+1. Open a new browser tab and go to **aistudio.google.com**.
+2. Sign in with a Google account (the same kind you'd use for Gmail). If you don't have one, the page offers to create one.
+3. If it asks you to accept terms of service, read and accept them.
+4. Look for a button or link that says **Get API key** (usually in the left sidebar or at the top of the page) and click it.
+5. Click **Create API key**. If it asks you to choose a "project," choose the default it suggests, or click **Create API key in new project**.
+6. A long code appears (letters and numbers, often starting with `AIza`). Click the **copy** icon next to it.
+7. Open a text note on your computer (Notes on Mac, Notepad on Windows) and paste the key there for now. You'll need it in Part 3.
+8. **Important:** if Google ever offers to "set up billing" or "upgrade" for this key, say no. Without billing, the key stays on the free plan. The worst that can happen is it stops answering for the rest of the day if lots of people use it — it can never charge you money.
+9. Optional but useful: on the same site, find the page about **rate limits** or **usage limits** and note how many requests per day the free plan allows for the model **gemini-2.5-flash**. That number is roughly how many questions the chatbot can answer per day.
+
+You can close this tab.
+
+## Part 2 — Create the Worker on Cloudflare
+
+### 2a. Get a copy of the Worker's code
+1. Go to **github.com/Laudy32/SoCal-Swordfight-Rules-Chatbot**.
+2. In the list of folders and files, click the folder named **worker**.
+3. Click the file named **worker.js**. Its contents appear on screen.
+4. Near the top right of the file's contents, find the **Copy raw file** button (an icon of two overlapping squares — hovering over it shows the name) and click it. The whole file is now copied.
+5. Leave this tab open.
+
+### 2b. Create a free Cloudflare account
+1. Open a new tab and go to **dash.cloudflare.com**.
+2. Click **Sign up**, enter an email address and a password, and follow the instructions (you may need to confirm your email by clicking a link Cloudflare sends you).
+3. If Cloudflare asks what you want to do or offers to "add a website/domain," skip that — you don't need a website of your own.
+
+### 2c. Create the Worker
+1. In Cloudflare's left-hand menu, click **Workers & Pages**. (If you don't see it, it may be inside a section called **Compute** — click that first.)
+2. Click the **Create** button (sometimes **Create application**).
+3. Choose **Create Worker** or **Start with Hello World!** — whichever is offered. It's a sample to replace.
+4. There's a box to name the Worker. Type: `socal-swordfight-rules`
+5. Click **Deploy**. Cloudflare creates a sample Worker.
+6. Click **Edit code** (sometimes **Continue to project**, then **Edit code**). A code editor opens, with some sample code in it.
+7. Click inside the code area. Select all of it — on Mac press **⌘ Command + A**, on Windows press **Ctrl + A**. Delete it with the Delete/Backspace key. The code area should now be empty.
+8. Paste the code you copied in step 2a — on Mac **⌘ Command + V**, on Windows **Ctrl + V**. The first line should start with `// SoCal Swordfight Rules Helper`.
+9. Click **Deploy** (usually at the top right). Confirm if it asks.
+10. Find your Worker's web address — shown near the top of the editor or on the Worker's main page. It looks like
+    `https://socal-swordfight-rules.YOUR-NAME.workers.dev`
+    (with your own account name instead of `YOUR-NAME`). Copy it and paste it into your text note next to the API key. You'll need it in Part 5.
+
+## Part 3 — Give the Worker your API key
+
+1. Go back to the Worker's main page in Cloudflare (click the Worker's name, `socal-swordfight-rules`, at the top of the editor, or find it again under **Workers & Pages**).
+2. Click the **Settings** tab.
+3. Find the section called **Variables and Secrets** and click **Add** (or **+ Add**).
+4. For **Type**, choose **Secret** (not "Text"). This keeps the key hidden, even from you, once saved.
+5. For **Variable name**, type exactly: `GEMINI_API_KEY` (capital letters, with underscores, no spaces).
+6. For **Value**, paste your API key from the text note (from Part 1).
+7. Click **Deploy** (or **Save**).
+
+## Part 4 — Check the Worker is working
+
+1. Open a new browser tab. Paste your Worker's web address (from Part 2, step 10) into the address bar and press Enter.
+2. You'll see a short block of text, not a normal web page. That's expected. Check two things in it:
+   - It contains `"apiKeyConfigured":true`
+   - It contains `"rules":{"ok":true`
+3. If both are there, the Worker is ready. Go to Part 5.
+   - If it says `"apiKeyConfigured":false` — redo Part 3, and check the name is exactly `GEMINI_API_KEY`.
+   - If it says `"rules":{"ok":false` — something is wrong with the rulebook file in the GitHub repo. Check that `kiosk/rules-full.txt` still exists there.
+   - If the page doesn't load at all — double-check the address was copied exactly.
+
+## Part 5 — Connect the web page to the Worker
+
+1. Go to **github.com/Laudy32/SoCal-Swordfight-Rules-Chatbot** and make sure you're signed in to GitHub.
+2. Click the folder **web**, then click the file **index.html**.
+3. Near the top right of the file's contents, click the **pencil icon** (hovering over it says "Edit this file"). The file becomes editable.
+4. Find this line — it's about two-thirds of the way down. To search, press **⌘ Command + F** (Mac) or **Ctrl + F** (Windows) and type `WORKER_URL`:
+   ```
+   const WORKER_URL = "";
+   ```
+5. Click between the two quote marks `""` and paste your Worker's address, so the line looks like:
+   ```
+   const WORKER_URL = "https://socal-swordfight-rules.YOUR-NAME.workers.dev";
+   ```
+   Be careful to keep both quote marks and the semicolon `;` at the end.
+6. Click the green **Commit changes…** button (top right).
+7. A box pops up. Leave the message as it is and click **Commit changes** in the box.
+8. Wait about two minutes. GitHub republishes the web page automatically.
+
+## Part 6 — Try it
+
+1. Go to **laudy32.github.io/SoCal-Swordfight-Rules-Chatbot**
+2. Type a question, such as "How many points is a cut to the head in longsword?", and click **Ask**. After a few seconds, an answer should appear (3 points).
+3. For a fuller check, see `HOW_TO_TEST.md` in the repo.
+4. If the page still says it "isn't connected to its answer service yet," wait another minute, then refresh the page. If it still says that, redo Part 5 and check the address is between the quote marks.
+
+You can delete the text note now (or keep the API key somewhere safe, like a password manager).
+
+---
+
+## If something goes wrong later
+
+The chat page shows a short message:
+- **"has hit its free usage limit"** — the free daily allowance is used up. It resets by itself, usually within a day.
+- **"Setup problem: the AI model … isn't available"** — Google retired that AI model. In Cloudflare, open the Worker, click **Edit code**, change `gemini-2.5-flash` on the line starting `const MODEL` to a current model name from Google AI Studio (pick one with "flash" in the name), then click **Deploy**.
+- **"Setup problem: the AI service key isn't valid"** or **"rejected this helper's key"** — make a new key (Part 1) and put it in the Worker (Part 3; edit the existing `GEMINI_API_KEY` entry instead of adding a new one).
+- **"Requests are only accepted from the SoCal Swordfight rules page"** — the web page's address changed. Ask someone comfortable editing code to add the new address to the `ALLOWED_ORIGINS` list near the top of `worker.js`.
+
+Cloudflare's **Logs** tab on the Worker's page shows technical details, useful if you ask someone else for help.
 
 ## Good to know
-- **Privacy:** participants' questions are sent to Google to be answered, and Google may use free-tier requests to improve its products. The page says this and asks people not to include personal information.
-- **Abuse protection is light:** the Worker only accepts requests from the rules page and only answers rules questions with a fixed set of instructions, so it isn't useful as a general free chatbot. Someone determined could still send requests directly; the worst case is using up the free daily quota, never a bill (as long as billing stays off — Step 1).
-- **Updating the rules (e.g. 2027):** replace `kiosk/rules-full.txt` in this repository. The Worker picks up the new text automatically within about an hour — nothing to redeploy. (Rebuild the kiosk model separately; see `kiosk/README.md`.)
-- **Needs internet:** only the short question and answer travel over the network (the ruleset goes from Cloudflare to Google, not from the phone), so even weak venue WiFi usually works. For fully offline use at the venue, use the kiosk.
+- **Privacy:** questions people type are sent to Google to be answered, and Google may use free-plan requests to improve its products. The chat page says this and asks people not to type personal information.
+- **Misuse:** the Worker only accepts questions from the rules page and only answers rules questions, so it's not useful to anyone as a general free chatbot. The worst case from misuse is using up the day's free allowance — never a bill, as long as billing stays off (Part 1, step 8).
+- **New rules next year:** replace `kiosk/rules-full.txt` in the repo with the new rulebook. The Worker picks up the new text by itself within about an hour — nothing to change here.
+- **Internet needed:** only the short question and answer travel over the phone's connection (the big rulebook goes from Cloudflare to Google), so weak WiFi usually works. For a fully offline option at the venue, see the kiosk setup in `kiosk/README.md`.
