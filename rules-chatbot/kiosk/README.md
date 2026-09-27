@@ -12,7 +12,7 @@ home beforehand, see `../web/`.
 1. **Install Ollama**: https://ollama.com/download (Mac/Windows/Linux).
 2. **Build the rules-aware model**:
    ```
-   cd rules-chatbot/kiosk
+   cd kiosk
    bash build-model.sh
    ```
    (Using `bash build-model.sh` rather than `./build-model.sh` avoids
@@ -72,7 +72,7 @@ everything (model + ruleset + interface) runs locally.
    concatenate all documents into one file with clear `## Section` headers
    between them (matching the format already in `rules-full.txt`).
 3. Replace `rules-full.txt` with the new version.
-4. Re-run `./build-model.sh` to rebuild the `swordfight-rules` model with
+4. Re-run `bash build-model.sh` to rebuild the `swordfight-rules` model with
    the updated content.
-5. Also update `../web/rules-condensed.txt` (see that folder's README) —
-   it's a separate, hand-summarized file and won't update automatically.
+5. Commit the new `rules-full.txt` to GitHub — the web version reads this
+   same file and picks up the change automatically within about an hour.
